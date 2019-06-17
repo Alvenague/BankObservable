@@ -6,26 +6,31 @@
     {
         static void Main(string[] args)
         {
-            Cellphone cellphone = new Cellphone(65666666);
-            Person person = new Person("Person 1", cellphone);
+            var cell = new List<int>
+            {
+                77252396,
+                70688999
+            };
 
-            Cellphone cellphone2 = new Cellphone(77565555);
-            Person person2 = new Person("Person 1", cellphone2);
+            IBankClient person = new Person("Person 1", cell, new Account(1));
 
-            var persons = new List<Person>();
-            persons.Add(person);
-            persons.Add(person2);
+            var cell2 = new List<int>
+            {
+                77252396
+            };
 
-            Account account = new Account(11111,persons);
+            IBankClient person2 = new Person("Person 1", cell2, new Account(2));
+            
             Bank bank = new Bank();
-            bank.accounts.Add(account);
-                     
-            CellphoneNotification notification= new CellphoneNotification(bank);
 
-            bank.ReceiveMoneyCredit(account,13);
-            person.UnsuscribeNotification();
-            bank.ReceiveMoneyCredit(account, 100);
+            bank.AddClient(person);
+            bank.AddClient(person2);
 
+
+            bank.ReceiveMoneyCredit(1,13);
+            bank.ReceiveMoneyCredit(1, 113);
+            bank.RemoveCellphone(1, 70688999);
+            bank.ReceiveMoneyCredit(1, 13);
         }
     }
 }

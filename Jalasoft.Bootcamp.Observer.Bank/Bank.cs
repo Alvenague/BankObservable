@@ -2,55 +2,58 @@
 {
     using System;
     using System.Collections.Generic;
-    public class Bank
+
+    public class Bank : IBank
     {
-        //Subject
         public int state;
+
         public string Name { get; set; }
 
-        public List<Account> accounts;
+        private static List<IBankClient> Clients;
 
-        List<Notification> notifications;
         public Bank()
         {
-            notifications = new List<Notification>();
-            accounts = new List<Account>();
+            Clients = new List<IBankClient>();
         }
-        public int GetState()
-        {
-            return this.state;
-        }
-        public void Attach(Notification notification)
-        {
-            notifications.Add(notification);
-        }
-        public void ReceiveMoneyCredit(Account account, int money)
-        {
-            foreach (var acount in accounts)
-            {
-                acount.ReceiveMoneyCredit(money);
-                if (account.AccountNumber == acount.AccountNumber)
-                {
-                    foreach (var person in account.Persons)
-                    {
-                        if (person.Cellphone.Subcribe) {
-                            Notify(person);
-                        }
-                        
-                    }
-                }
 
-            }
-        }
-        private void Notify(Person person)
+        public void RemoveCellphone(int accountNumber, int cell)
         {
-            
-            foreach (var notification in notifications)
-            {
-                Console.WriteLine("derson name: " + person.Name+" number: "+person.Cellphone.CellphoneNumber);
-                notification.Update(person.Cellphone.CellphoneNumber);
-            }
+            IBankClient client = Clients.Find(c => c.Account.AccountNumber == accountNumber);
+            client.Cellphone.Remove(cell);
+        }
 
+        public List<IBankClient> AddClient(IBankClient client)
+        {
+            Clients.Add(client);
+
+            return Clients;
+        }
+
+        public List<IBankClient> RemoveClient(IBankClient client)
+        {
+            Clients.Remove(client);
+
+            return Clients;
+        }
+
+        public void NotifyClient(IBankClient client)
+        {
+            string response= System.String.Empty;
+            string cellResponse;       
+            cellResponse = client.UpdateAccountStatus(client.Account.MoneyCredit);
+            Console.WriteLine(cellResponse);            
+        }
+
+        public bool ReceiveMoneyCredit(int accountNumber, int money)
+        {
+            IBankClient client = Clients.Find(c => c.Account.AccountNumber == accountNumber);
+            if (client != null)
+            {
+                client.Account.MoneyCredit += money;
+                NotifyClient(client);
+                return true;
+            }
+            return false;
         }
     }
 }
