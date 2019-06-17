@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class Bank : IBank
     {
@@ -9,48 +10,57 @@
 
         public string Name { get; set; }
 
-        private static List<IBankClient> Clients;
+        private static List<Account> Accounts;
 
         public Bank()
         {
-            Clients = new List<IBankClient>();
+            Accounts = new List<Account>();
+        }
+
+        public int GetStatus(int accountNumber)
+        {
+            Account account = Accounts.Find(a => a.AccountNumber == accountNumber);
+            return account.MoneyCredit;
         }
 
         public void RemoveCellphone(int accountNumber, int cell)
         {
-            IBankClient client = Clients.Find(c => c.Account.AccountNumber == accountNumber);
-            client.Cellphone.Remove(cell);
+            Account account = Accounts.Find(c => c.AccountNumber == accountNumber);
+            account.Owners.Find(o => o.Cellphone.Remove(cell));
         }
 
-        public List<IBankClient> AddClient(IBankClient client)
+        public List<Account> AddClient(Account account)
         {
-            Clients.Add(client);
+            Accounts.Add(account);
 
-            return Clients;
+            return Accounts;
         }
 
-        public List<IBankClient> RemoveClient(IBankClient client)
+        public List<Account> RemoveClient(Account account)
         {
-            Clients.Remove(client);
+            Accounts.Remove(account);
 
-            return Clients;
+            return Accounts;
         }
 
-        public void NotifyClient(IBankClient client)
+        public void NotifyClient(IBankClient client, int accountNumber)
         {
             string response= System.String.Empty;
             string cellResponse;       
-            cellResponse = client.UpdateAccountStatus(client.Account.MoneyCredit);
+            cellResponse = client.UpdateAccountStatus(accountNumber);
             Console.WriteLine(cellResponse);            
         }
 
         public bool ReceiveMoneyCredit(int accountNumber, int money)
         {
-            IBankClient client = Clients.Find(c => c.Account.AccountNumber == accountNumber);
-            if (client != null)
+            var account = Accounts.Find(a => a.AccountNumber == accountNumber);
+            if (account != null)
             {
-                client.Account.MoneyCredit += money;
-                NotifyClient(client);
+                account.MoneyCredit += money;
+                foreach (var owner in account.Owners)
+                {
+                    NotifyClient(owner, account.AccountNumber);
+                }                
                 return true;
             }
             return false;

@@ -8,11 +8,7 @@ namespace Jalasoft.Bootcamp.Observer.Bank
     {
         string UpdateAccountStatus(int accountNumber);
 
-        void UnsuscribeNotification(int cellNumber);
-
         string Name { get; set; }
-
-        Account Account { get; set; }
 
         List<int> Cellphone { get; set; }
     }

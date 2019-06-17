@@ -25,11 +25,18 @@ namespace Jalasoft.Bootcamp.Observer.Bank.Tests
                 77254896, 70584963
             };
 
-            var newClient = new Person("Monica", cell, new Account(2));
+            var client = new Person("Monica", cell, BankSistem);
 
-            List<IBankClient> clientList = BankSistem.AddClient(newClient);
+            var list1 = new List<IBankClient>()
+            {
+                client
+            };
 
-            Assert.NotEmpty(clientList);
+            var account1 = new Account(1, list1);
+            
+            List<Account> accountList = BankSistem.AddClient(account1);
+
+            Assert.NotEmpty(accountList);
         }
 
         [Fact]
@@ -37,14 +44,21 @@ namespace Jalasoft.Bootcamp.Observer.Bank.Tests
         {
             var cell = new List<int>
             {
-                77252396
+                77254896, 70584963
             };
 
-            var newClient = new Person("Monica", cell, new Account(2));
+            var client = new Person("Monica", cell, BankSistem);
 
-            BankSistem.AddClient(newClient);
+            var list1 = new List<IBankClient>()
+            {
+                client
+            };
 
-            List<IBankClient> clientList = BankSistem.RemoveClient(newClient);
+            var account1 = new Account(1, list1);
+
+            BankSistem.AddClient(account1);
+
+            List<Account> clientList = BankSistem.RemoveClient(account1);
 
             Assert.Empty(clientList);
         }
@@ -54,12 +68,21 @@ namespace Jalasoft.Bootcamp.Observer.Bank.Tests
         {
             var cell = new List<int>
             {
-                77252396
+                77254896, 70584963
             };
 
-            var newClient = new Person("Monica", cell, new Account(2));
+            var client = new Person("Monica", cell, BankSistem);
 
-            string response = newClient.UpdateAccountStatus(1);
+            var list1 = new List<IBankClient>()
+            {
+                client
+            };
+
+            var account1 = new Account(1, list1);
+
+            BankSistem.AddClient(account1);
+
+            string response = client.UpdateAccountStatus(1);
 
             Assert.Contains("Succeeded", response);
         }
@@ -69,14 +92,21 @@ namespace Jalasoft.Bootcamp.Observer.Bank.Tests
         {
             var cell = new List<int>
             {
-                77252396
+                77254896, 70584963
             };
 
-            var newClient = new Person("Monica", cell, new Account(2));
+            var client = new Person("Monica", cell, BankSistem);
 
-            BankSistem.AddClient(newClient);
+            var list1 = new List<IBankClient>()
+            {
+                client
+            };
 
-            var result = BankSistem.ReceiveMoneyCredit(newClient.Account.AccountNumber, 100);
+            var account1 = new Account(1, list1);
+
+            BankSistem.AddClient(account1);
+
+            var result = BankSistem.ReceiveMoneyCredit(account1.AccountNumber, 100);
 
             Assert.True(result);
         }
@@ -86,16 +116,23 @@ namespace Jalasoft.Bootcamp.Observer.Bank.Tests
         {
             var cell = new List<int>
             {
-                77252396
+                77254896
             };
 
-            var newClient = new Person("Monica", cell, new Account(2));
+            var client = new Person("Monica", cell, BankSistem);
 
-            BankSistem.AddClient(newClient);
+            var list1 = new List<IBankClient>()
+            {
+                client
+            };
 
-            BankSistem.RemoveCellphone(2, 77252396);
+            var account1 = new Account(1, list1);
 
-            Assert.Empty(newClient.Cellphone);
+            BankSistem.AddClient(account1);
+
+            BankSistem.RemoveCellphone(1, 77254896);
+
+            Assert.Empty(client.Cellphone);
         }
     }
 }

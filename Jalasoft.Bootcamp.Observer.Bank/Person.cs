@@ -6,20 +6,16 @@
 
     public class Person : IBankClient
     {
-        public Person(string name, List<int> cellphone, Account account)
+        public Person(string name, List<int> cellphone, Bank bank)
         {
             this.Name = name;
             this.Cellphone = cellphone;
-            this.Account = account;
+            this.Bank = bank;
         }
 
-        public void UnsuscribeNotification(int cellNumber)
+        public string UpdateAccountStatus(int accountNumber)
         {
-            Cellphone.Remove(cellNumber);
-        }
-
-        public string UpdateAccountStatus(int money)
-        {
+            int money = Bank.GetStatus(accountNumber);
             if(Cellphone.Count > 0)
             {
                 foreach (var cell in Cellphone)
@@ -27,7 +23,7 @@
                     Console.WriteLine("Current money on account " + money + " cellphone notified : " + cell);
                 }
 
-                return "Notifications Succeeded";
+                return "Notifications Succeeded to " + this.Name;
             }
 
             return "There are no numbers to notify";
@@ -36,8 +32,6 @@
         public string Name { get; set; }
 
         public List<int> Cellphone { get; set; }
-
-        public Account Account { get; set; }
 
         public Bank Bank { get; set; }
     }
